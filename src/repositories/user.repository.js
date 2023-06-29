@@ -38,4 +38,4 @@ const list = async (id) => {
     }
 }
 
-module.exports = { create, remove, edit }
+module.exports = { create, remove, edit, list }
