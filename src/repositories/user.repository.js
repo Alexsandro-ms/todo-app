@@ -18,4 +18,14 @@ const remove = async (id) => {
     }
 }
 
+const edit = async (id, data) => {
+    try {
+        const user = await UserModel.findByIdAndUpdate(id, data).lean()
+
+        return user;
+    } catch (error) {
+        return error;
+    }
+}
+
 module.exports = { create, remove }
