@@ -28,4 +28,14 @@ const edit = async (id, data) => {
     }
 }
 
-module.exports = { create, remove }
+const list = async (id) => {
+    try {
+        const user = await UserModel.findById(id).lean()
+
+        return user;
+    } catch (error) {
+        return error;
+    }
+}
+
+module.exports = { create, remove, edit }
