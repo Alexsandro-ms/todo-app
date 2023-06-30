@@ -20,7 +20,7 @@ const remove = async (id) => {
 
 const edit = async (id, data) => {
     try {
-        const user = await UserModel.findByIdAndUpdate(id, data).lean()
+        const user = await UserModel.findByIdAndUpdate(id, data)
 
         return user;
     } catch (error) {
@@ -30,7 +30,7 @@ const edit = async (id, data) => {
 
 const list = async (id) => {
     try {
-        const user = await UserModel.findById(id).lean()
+        const user = await UserModel.findById(id)
 
         return user;
     } catch (error) {
