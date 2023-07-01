@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
     imagePath: {
         type: String,
-        default: undefined
+        default: ""
     },
     firstName: {
         type: String,
