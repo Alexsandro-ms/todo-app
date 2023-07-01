@@ -1,14 +1,20 @@
 const { UserModel } = require("../models/user.model")
 
-const create = async (user) => {
+const create = async (data) => {
     try {
-        const user = await UserModel.create(user);
-        return user;
+      const user = await UserModel.create({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+        imagePath: data.imagePath,
+        tasks: [],
+      });
+      return user;
     } catch (error) {
-        return error;
+      return error;
     }
-}
-
+  };
 const remove = async (id) => {
     try {
         await UserModel.findByIdAndDelete(id);
