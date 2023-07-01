@@ -14,7 +14,8 @@ const create = async (data) => {
     } catch (error) {
       return error;
     }
-  };
+};
+
 const remove = async (id) => {
     try {
         await UserModel.findByIdAndDelete(id);
@@ -44,4 +45,14 @@ const list = async (id) => {
     }
 }
 
-module.exports = { create, remove, edit, list }
+const find = async (email) => {
+    try {
+        const user = await UserModel.findOne({email})
+
+        return user
+    } catch (error) {
+        return error;
+    }
+}
+
+module.exports = { create, remove, edit, list, find }
