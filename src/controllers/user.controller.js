@@ -9,6 +9,12 @@ const createUser = async (req,res) => {
             throw new Error('Fill all fields')
         }
 
+        const verifyingEmail = await UserRepository.find(email)
+
+        if(verifyingEmail){
+            return res.status(400).json({ message: "Email already exists" });
+        }
+
         const encryptPassword = await bcrypt.hash(password, 10)
 
         const userResponse = await UserRepository.create(
@@ -17,16 +23,12 @@ const createUser = async (req,res) => {
                 lastName,
                 email,
                 password: encryptPassword,
-                imagePath: "",
             }
         )
-
-        console.log(userResponse)
 
         return res.status(200).json(userResponse)
 
     } catch (error) {
-        console.log(error)
         return res.status(500).json(error)
     }
 }
