@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-    imagePath: String,
+    imagePath: {
+        type: String,
+        default: undefined
+    },
     firstName: {
         type: String,
         required: true,
