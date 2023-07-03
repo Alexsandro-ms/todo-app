@@ -49,4 +49,4 @@ const removeUser = async (req,res) => {
     }
 }
 
-module.exports = { createUser }
+module.exports = { createUser, removeUser }
