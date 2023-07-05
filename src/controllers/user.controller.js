@@ -6,7 +6,7 @@ const createUser = async (req,res) => {
         const {firstName, lastName, email, password } = req.body
 
         if(!firstName || !lastName || !email || !password){
-            throw new Error('Fill all fields')
+            return res.status(400).json({message:'Fill all fields'})
         }
 
         const verifyingEmail = await UserRepository.find(email)
