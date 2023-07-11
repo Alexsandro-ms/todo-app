@@ -1,8 +1,8 @@
 const bcrypt = require("bcrypt")
-const userSchema = require("../utils/user.validation")
+const userSchema = require("../utils/validations/user.validation")
 const idSchema = require("../utils/validations/id.validation.js")
-const userUpdateSchema = require("../utils/validations/user.update.validation")
-const UserRepository = require("../repositories/user.repository")
+const userUpdateSchema = require("../utils/validations/user.update.validation.js")
+const UserRepository = require("../repositories/user.repository.js")
 
 const createUser = async (req,res) => {
     try {
