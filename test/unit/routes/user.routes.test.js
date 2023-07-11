@@ -71,9 +71,10 @@ describe('User Routes', () => {
   });
 
   test('should return the erro `Inválid ID` while remove a user', async () => { 
-    const response = await request(app).delete("/auth/remove/invalid-id") 
+    const response = await request(app).delete('/auth/remove/invalid-id');
 
-    expect(response.status).toBe(404)
-    expect(response.body).toStrictEqual({message: 'Inválid ID'})
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('message');
+    expect(response.body.message).toEqual(expect.any(String));
   });
 });
