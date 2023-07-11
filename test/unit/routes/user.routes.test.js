@@ -77,4 +77,23 @@ describe('User Routes', () => {
     expect(response.body).toHaveProperty('message');
     expect(response.body.message).toEqual(expect.any(String));
   });
+
+  test('should edit a user', async () => {
+
+    user = {
+        firstName: "John"
+    }
+
+    const response = await request(app).put("/auth/edit/1").send(user) 
+
+    expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual({message: "User edited"})
+  });
+
+  test('should return "Invalid ID" when ID is not a number', async () => {
+    const response = await request(app).put('/auth/edit/invalid-id').send({});
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ message: 'Invalid ID' });
+  });
 });
