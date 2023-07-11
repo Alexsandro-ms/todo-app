@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt")
 const userSchema = require("../utils/user.validation")
-const idSchema = require("../utils/id.validation")
+const idSchema = require("../utils/validations/id.validation.js")
+const userUpdateSchema = require("../utils/validations/user.update.validation")
 const UserRepository = require("../repositories/user.repository")
 
 const createUser = async (req,res) => {
@@ -55,4 +56,26 @@ const removeUser = async (req,res) => {
     }
 }
 
-module.exports = { createUser, removeUser }
+const editUser = async (req,res) => {
+    try {
+        const { id } = req.params;
+        const data = req.body
+
+        if (isNaN(Number(id))) {
+            return res.status(400).json({ message: "Invalid ID" });
+          }
+
+        await idSchema.validate({ id: Number(id) });
+
+        await userUpdateSchema.validate(data)
+
+        await UserRepository.edit(Number(id), data)
+
+        return res.status(200).json({message: "User edited"})
+
+    } catch (error) {
+        return res.status(400).json({message: error.message})
+    }
+}
+
+module.exports = { createUser, removeUser, editUser }
