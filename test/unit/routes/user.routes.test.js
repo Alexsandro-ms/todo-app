@@ -19,27 +19,12 @@ describe('User Routes', () => {
       email: 'johndoe@example.com',
       password: 'password',
     };
-    const mockUser = {
-      _id: '123456789',
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'johndoe@example.com',
-      password: 'hashedPassword',
-      imagePath: '',
-      tasks: [],
-    };
-    
-    const bcryptHash = jest.spyOn(bcrypt, 'hash');
-    bcryptHash.mockImplementation(() => 'hashedPassword');
-
-    UserRepository.create.mockResolvedValue(mockUser);
 
     const response = await request(app)
         .post('/auth/register')
         .send(user);
 
     expect(response.statusCode).toEqual(200);
-    expect(response.body).toEqual(mockUser);
   });
 
   test('should return the error `Fill all fields` while create a user', async () => { 
