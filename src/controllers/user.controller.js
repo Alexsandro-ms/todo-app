@@ -78,4 +78,23 @@ const editUser = async (req,res) => {
     }
 }
 
-module.exports = { createUser, removeUser, editUser }
+const listUser = async (req,res) => {
+    try {
+        const { id } = req.params;
+
+        if (isNaN(Number(id))) {
+            return res.status(400).json({ message: "Invalid ID" });
+        }
+
+        await idSchema.validate({ id: Number(id) })
+
+        const user = await UserRepository.list(Number(id))        
+
+        return res.status(200).json(user)
+
+    } catch (error) {
+        return res.status(400).json({message: error.message})
+    }
+}
+
+module.exports = { createUser, removeUser, editUser, listUser }
