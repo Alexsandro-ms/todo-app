@@ -1,8 +1,10 @@
 const bcrypt = require("bcrypt")
-const userSchema = require("../utils/validations/user.validation")
-const idSchema = require("../utils/validations/id.validation.js")
-const userUpdateSchema = require("../utils/validations/user.update.validation.js")
 const UserRepository = require("../repositories/user.repository.js")
+
+const userValidation = require("../utils/validations/user.validation")
+const idValidation = require("../utils/validations/id.validation.js")
+const userUpdateValidation = require("../utils/validations/user.update.validation.js")
+const emailValidation = require("../utils/validations/email.validation.js")
 
 const createUser = async (req,res) => {
     try {
@@ -12,7 +14,7 @@ const createUser = async (req,res) => {
             return res.status(400).json({message:'Fill all fields'})
         }
 
-        await userSchema.validate(req.body)
+        await userValidation.validate(req.body)
 
         const verifyingEmail = await UserRepository.find(email)
 
@@ -46,7 +48,7 @@ const removeUser = async (req,res) => {
             return res.status(400).json({ message: "Invalid ID" });
           }
 
-        await idSchema.validate({ id: Number(id) });
+        await idValidation.validate({ id: Number(id) });
 
         await UserRepository.remove(id)
 
@@ -65,9 +67,9 @@ const editUser = async (req,res) => {
             return res.status(400).json({ message: "Invalid ID" });
           }
 
-        await idSchema.validate({ id: Number(id) });
+        await idValidation.validate({ id: Number(id) });
 
-        await userUpdateSchema.validate(data)
+        await userUpdateValidation.validate(data)
 
         await UserRepository.edit(Number(id), data)
 
@@ -86,9 +88,24 @@ const listUser = async (req,res) => {
             return res.status(400).json({ message: "Invalid ID" });
         }
 
-        await idSchema.validate({ id: Number(id) })
+        await idValidation.validate({ id: Number(id) })
 
         const user = await UserRepository.list(Number(id))        
+
+        return res.status(200).json(user)
+
+    } catch (error) {
+        return res.status(400).json({message: error.message})
+    }
+}
+
+const findUser = async (req,res) => {
+    try {
+        const { email } = req.body
+
+        await emailValidation.validate(email)
+
+        const user = await UserRepository.find(email)
 
         return res.status(200).json(user)
 
