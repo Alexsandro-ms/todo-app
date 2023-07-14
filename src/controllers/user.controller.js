@@ -114,4 +114,4 @@ const findUser = async (req,res) => {
     }
 }
 
-module.exports = { createUser, removeUser, editUser, listUser }
+module.exports = { createUser, removeUser, editUser, listUser, findUser }
