@@ -1,9 +1,8 @@
 const bcrypt = require("bcrypt")
 const UserRepository = require("../repositories/user.repository.js")
 
-const userValidation = require("../utils/validations/user.validation")
+const { userSchema, userUpdateSchema } = require("../utils/validations/user.validation")
 const idValidation = require("../utils/validations/id.validation.js")
-const userUpdateValidation = require("../utils/validations/user.update.validation.js")
 const emailValidation = require("../utils/validations/email.validation.js")
 
 const createUser = async (req,res) => {
@@ -14,7 +13,7 @@ const createUser = async (req,res) => {
             return res.status(400).json({message:'Fill all fields'})
         }
 
-        await userValidation.validate(req.body)
+        await userSchema.validate(req.body)
 
         const verifyingEmail = await UserRepository.find(email)
 
@@ -69,7 +68,6 @@ const editUser = async (req,res) => {
 
         await idValidation.validate({ id: Number(id) });
 
-        await userUpdateValidation.validate(data)
 
         await UserRepository.edit(Number(id), data)
 

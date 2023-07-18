@@ -49,4 +49,4 @@ try {
 }
 };  
 
-module.exports = { createTask, removeTask, editTask, listTasks, findTask, listByUser };
+module.exports = { create, remove, edit, findById, listByUser };
