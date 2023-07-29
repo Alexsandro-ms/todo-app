@@ -1,9 +1,56 @@
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 const UserRepository = require("../repositories/user.repository.js")
 
-const { userSchema, userUpdateSchema } = require("../utils/validations/user.validation")
+const { userSchema, userUpdateSchema, logInUserSchema } = require("../utils/validations/user.validation")
 const idValidation = require("../utils/validations/id.validation.js")
 const emailValidation = require("../utils/validations/email.validation.js")
+
+const dotenv = require("dotenv").config()
+
+const logInUser = async (req, res) => {
+    try {
+      const { email, password } = req.body;
+  
+      try {
+        await logInUserSchema.validate({ email, password });
+      } catch (validationError) {
+        return res.status(400).json({ message: "Fill all fields" });
+      }
+
+      const user = await UserRepository.find(email);
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      const passwordValidation = await bcrypt.compare(password, user.password);
+  
+      if (!passwordValidation) {
+        return res.status(401).json({ message: "Invalid password" });
+      }
+  
+      const token = await jwt.sign(
+        {
+          user_id: user._id,
+          user_image: user.imagePath,
+          user_name: `${user.firstName} ${user.lastName}`,
+          user_email: `${user.email}`
+        },
+        process.env.JWT_KEY,
+        {
+            expiresIn: "48h",
+        }
+      );
+  
+      return res
+        .status(200)
+        .json({ message: "User successfully logged in", token });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ message: error });
+    }
+  };
 
 const createUser = async (req,res) => {
     try {
@@ -112,4 +159,4 @@ const findUser = async (req,res) => {
     }
 }
 
-module.exports = { createUser, removeUser, editUser, listUser, findUser }
+module.exports = { createUser, removeUser, editUser, listUser, findUser, logInUser }

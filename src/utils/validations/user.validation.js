@@ -16,4 +16,9 @@ let userUpdateSchema = yup.object({
   tasks: yup.array().of(yup.string()) 
 });
 
-module.exports = { userSchema, userUpdateSchema }
+const logInUserSchema = yup.object().shape({
+    email: yup.string().email().required(),
+    password: yup.string().min(6).required(),
+});
+
+module.exports = { userSchema, userUpdateSchema, logInUserSchema }
