@@ -1,3 +1,4 @@
+const { UserModel } = require("../models/user.model");
 const TaskRepository = require("../repositories/task.repository");
 const emailValidation = require("../utils/validations/email.validation.js")
 const { taskSchema } = require("../utils/validations/task.validation")
@@ -9,6 +10,8 @@ const createTask = async (req, res) => {
         const taskValidate = await taskSchema.validate(req.body);
 
         const task = await TaskRepository.create(taskValidate);
+
+        await UserModel.findByIdAndUpdate(userId, { $push: { tasks: task._id } });
 
         return res.status(200).json(task);
         } catch (error) {
@@ -49,12 +52,15 @@ const listTasks = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    await emailValidation.validate(Number(userId));
+    if(!userId){
+        return res.status(400).json({message: "UserId is required"})
+    }
 
     const tasks = await TaskRepository.listByUser(userId);
 
     return res.status(200).json(tasks);
   } catch (error) {
+    console.log(error)
     return res.status(400).json({ message: error.message });
   }
 };
