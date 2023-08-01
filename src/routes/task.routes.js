@@ -4,7 +4,7 @@ const { createTask, editTask, findTask, listTasks, removeTask } = require("../co
 
 const router = express.Router()
 
-router.get("/task/list/:userId", listTasks)
+router.get("/task/list/:userId", authMiddleware, listTasks)
 router.post("/task/create", authMiddleware, createTask)
 router.post("/task/find/:id", findTask)
 router.delete("/task/remove/:id", removeTask)
