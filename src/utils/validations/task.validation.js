@@ -6,7 +6,6 @@ let taskSchema = yup.object({
     dueDate: yup.date(),
     priority: yup.string().oneOf(["low", "medium", "high"]).default("low"),
     completed: yup.boolean().default(false),
-    userId: yup.string().required()
 })
 
 module.exports = { taskSchema }
