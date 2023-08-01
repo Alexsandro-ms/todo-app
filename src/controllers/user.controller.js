@@ -5,6 +5,9 @@ const UserRepository = require("../repositories/user.repository.js")
 const { userSchema, userUpdateSchema, logInUserSchema } = require("../utils/validations/user.validation")
 const idValidation = require("../utils/validations/id.validation.js")
 const emailValidation = require("../utils/validations/email.validation.js")
+const bodyMessage = require("../utils/sendEmail/text.email.js")
+
+const sendEmail = require("../utils/sendEmail/send-email.js")
 
 const dotenv = require("dotenv").config()
 
@@ -78,6 +81,8 @@ const createUser = async (req,res) => {
                 password: encryptPassword,
             }
         )
+
+        await sendEmail(email, "New account", bodyMessage(`${firstName} ${lastName}`))
 
         return res.status(200).json(userResponse)
 
