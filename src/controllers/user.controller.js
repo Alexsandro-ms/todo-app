@@ -5,9 +5,10 @@ const UserRepository = require("../repositories/user.repository.js")
 const { userSchema, userUpdateSchema, logInUserSchema } = require("../utils/validations/user.validation")
 const idValidation = require("../utils/validations/id.validation.js")
 const emailValidation = require("../utils/validations/email.validation.js")
-const { bodyMessage, sendToken} = require("../utils/sendEmail/text.email.js")
+const { bodyMessage, sendCode} = require("../utils/sendEmail/text.email.js")
 
 const sendEmail = require("../utils/sendEmail/send-email.js")
+const generateRandomCode = require("../utils/generateRandomCode")
 const { UserModel } = require("../models/user.model.js")
 
 const dotenv = require("dotenv").config()
@@ -92,35 +93,59 @@ const createUser = async (req,res) => {
     }
 }
 
-const sendPasswordRecoveryEmail = async (req,res) => {
+const sendPasswordRecoveryEmail = async (req, res) => {
     try {
-    const { email } = req.body
-
-    const user = await UserRepository.find(email)
-
-    if (!user) {
-        return res.status(404).json({message: "E-mail not registered"})
+      const { email } = req.body;
+  
+      const user = await UserRepository.find(email);
+  
+      if (!user) {
+        return res.status(404).json({ message: "E-mail not registered" });
+      }
+  
+      const code = generateRandomCode();
+  
+      user.resetPasswordCode = code;
+  
+      await user.save();
+  
+      await sendEmail(
+        email,
+        "Reset Your TodoList Password",
+        sendCode(`${user.firstName} ${user.lastName}`, code)
+      );
+  
+      return res.status(200).json({ message: "Code generated" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: error });
     }
-
-    const payload = {
-      userId: user._id,
-      email: user.email,
-    };
-
-    const token = jwt.sign(payload, process.env.JWT_KEY, { expiresIn: '15m' });
-
-    user.resetPasswordToken = token;
-
-    await user.save();
-
-    await sendEmail(email, "Change Password", sendToken(`${user.firstName} ${user.lastName}`, token))
-
-    return res.status(200).json({message: "Token generated"});
-  } catch (error) {
-    console.log(error)
-    return res.status(500).json({message: error})
-  }
-}
+};
+  
+  const changePassword = async (req, res) => {
+    try {
+      const { code, newPassword } = req.body;
+  
+      if (!code) {
+        return res.status(400).json({ message: "Invalid code" });
+      }
+  
+      const user = await UserModel.findOne({ resetPasswordCode: code });
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      user.password = newPassword;
+      user.resetPasswordCode = ''; 
+      await user.save();
+  
+      return res.status(200).json({ message: "Password changed successfully" });
+    } catch (error) {
+      console.error("Error while changing password:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+};
 
 const removeUser = async (req,res) => {
     try {
@@ -195,4 +220,4 @@ const findUser = async (req,res) => {
     }
 }
 
-module.exports = { createUser, removeUser, editUser, listUser, findUser, logInUser, sendPasswordRecoveryEmail }
+module.exports = { createUser, removeUser, editUser, listUser, findUser, logInUser, sendPasswordRecoveryEmail, changePassword }
