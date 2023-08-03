@@ -71,4 +71,4 @@ function sendCode(userName, code) {
 }
 
   
-  module.exports = { generateEmailBody, sendToken};
+  module.exports = { generateEmailBody, sendCode};
