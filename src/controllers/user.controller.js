@@ -5,7 +5,7 @@ const UserRepository = require("../repositories/user.repository.js")
 const { userSchema, userUpdateSchema, logInUserSchema } = require("../utils/validations/user.validation")
 const idValidation = require("../utils/validations/id.validation.js")
 const emailValidation = require("../utils/validations/email.validation.js")
-const { bodyMessage, sendCode} = require("../utils/sendEmail/text.email.js")
+const { generateEmailBody, sendCode} = require("../utils/sendEmail/text.email.js")
 
 const sendEmail = require("../utils/sendEmail/send-email.js")
 const generateRandomCode = require("../utils/generateRandomCode")
@@ -84,11 +84,12 @@ const createUser = async (req,res) => {
             }
         )
 
-        await sendEmail(email, "New account", bodyMessage(`${firstName} ${lastName}`))
+        await sendEmail(email, "New account", generateEmailBody(`${firstName} ${lastName}`))
 
         return res.status(200).json(userResponse)
 
     } catch (error) {
+        console.log(error);
         return res.status(500).json({message: error})
     }
 }
@@ -142,7 +143,7 @@ const sendPasswordRecoveryEmail = async (req, res) => {
   
       return res.status(200).json({ message: "Password changed successfully" });
     } catch (error) {
-      console.error("Error while changing password:", error);
+      console.error(error);
       return res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -161,6 +162,7 @@ const removeUser = async (req,res) => {
 
         return res.status(200).json({message: "User deleted"})
     } catch (error) {
+        console.log(error);
         return res.status(400).json({ message: error.message });
     }
 }
@@ -182,6 +184,7 @@ const editUser = async (req,res) => {
         return res.status(200).json({message: "User edited"})
 
     } catch (error) {
+        console.log(error);
         return res.status(400).json({message: error.message})
     }
 }
@@ -201,6 +204,7 @@ const listUser = async (req,res) => {
         return res.status(200).json(user)
 
     } catch (error) {
+        console.log(error);
         return res.status(400).json({message: error.message})
     }
 }
@@ -216,6 +220,7 @@ const findUser = async (req,res) => {
         return res.status(200).json(user)
 
     } catch (error) {
+        console.log(error);
         return res.status(400).json({message: error.message})
     }
 }
