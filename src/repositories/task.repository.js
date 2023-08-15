@@ -28,25 +28,48 @@ const edit = async (id, data) => {
     }
 };
 
-const listByUser = async (userId) => {
+const listByUser = async (userId, page, perPage) => {
     try {
-        const user = await UserModel.findById(userId).populate("tasks");
+        const user = await UserModel.findById(userId).populate({
+            path: 'tasks',
+            options: {
+                sort: { created_at: -1 },
+                skip: (page - 1) * perPage,
+                limit: perPage
+            }
+        });
+
         if (!user) {
-        throw new Error("User not exist");
+            throw new Error("User not exist");
         }
+
         return user.tasks;
     } catch (error) {
-        return error;
+        throw error;
     }
 };
 
+
 const findById = async (id) => {
-try {
-    const task = await TaskModel.findById(id);
-    return task;
-} catch (error) {
-    return error;
-}
+    try {
+        const task = await TaskModel.findById(id);
+        return task;
+    } catch (error) {
+        return error;
+    }
 };  
 
-module.exports = { create, remove, edit, findById, listByUser };
+const findTodayTasks = async (userId, date) => {
+    try {
+        const tasks = await TaskModel.find({
+        userId: userId,
+        dueDate: date,
+        });
+
+        return tasks;
+    } catch (error) {
+        throw error;
+    }
+};
+
+module.exports = { create, remove, edit, findById, listByUser, findTodayTasks };
