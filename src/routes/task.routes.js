@@ -7,7 +7,7 @@ const router = express.Router()
 router.get("/task/list", authMiddleware, listTasks)
 router.get("/task/list/today", authMiddleware, listTaskToday)
 router.post("/task/create", authMiddleware, createTask)
-router.post("/task/find/:id", authMiddleware, findTask)
+router.get("/task/find/:id", authMiddleware, findTask)
 router.delete("/task/remove/:id", authMiddleware, removeTask)
 router.put("/task/edit/:id", authMiddleware, editTask)
 
