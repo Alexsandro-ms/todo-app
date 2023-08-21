@@ -123,7 +123,7 @@ const sendPasswordRecoveryEmail = async (req, res) => {
     }
 };
   
-  const changePassword = async (req, res) => {
+const changePassword = async (req, res) => {
     try {
       const { code, newPassword } = req.body;
   
@@ -136,8 +136,10 @@ const sendPasswordRecoveryEmail = async (req, res) => {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
+
+      const encryptPassword = await bcrypt.hash(newPassword, 10)
   
-      user.password = newPassword;
+      user.password = encryptPassword;
       user.resetPasswordCode = ''; 
       await user.save();
   
