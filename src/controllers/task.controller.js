@@ -55,7 +55,7 @@ const listTasks = async (req, res) => {
         const { user_id } = req.user;
 
         const page = req.query.page ? parseInt(req.query.page) : 1;
-        const perPage = req.query.perPage ? parseInt(req.query.perPage) : 10;
+        const perPage = req.query.perPage ? parseInt(req.query.perPage) : 6;
 
         const userTasks = await TaskRepository.listByUser(user_id, page, perPage);
 
@@ -69,11 +69,11 @@ const listTasks = async (req, res) => {
 
 const findTask = async (req, res) => {
   try {
-    const { user_id } = req.user;
+    const { id } = req.params;
 
-    await idValidation.validate(user_id);
+    await idValidation.validate(id);
 
-    const task = await TaskRepository.find(user_id);
+    const task = await TaskRepository.find(id);
 
     return res.status(200).json(task);
   } catch (error) {
