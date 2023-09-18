@@ -16,7 +16,7 @@ function generateEmailBody(userName) {
       <p>Get started right now and improve your productivity!</p>
       <p>TodoList Team</p>
       <p>
-      <a href="https://www.seusite.com/app" class="btn">Go to</a>
+      <a href="https://todoapp-al.vercel.app" class="btn">Go to</a>
       </p>
       </div>
       </body>
@@ -49,7 +49,7 @@ function sendCode(userName, code) {
       To reset your password, follow these steps:
       </p>
       <p>1. Click the link below or copy-paste it into your browser's address bar:</p>
-      <a href="http://localhost:5173/recover-password/" class="btn">Change your password</a>
+      <a href="https://todoapp-al.vercel.app/insert-your-code" class="btn">Change your password</a>
       <p>2. Enter the provided verification code: <strong>${code}</strong><p>
       <p>3. Set a new password for your account.</p>
       <p>

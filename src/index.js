@@ -8,7 +8,7 @@ const ApplicationRoutes = require("./routes")
 const app = express();
 
 const corsOptions = {
-    origin: "https://todoapp-al.vercel.app", 
+    origin: ["https://todoapp-al.vercel.app", "http://localhost:5173"], 
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
     optionsSuccessStatus: 204,
