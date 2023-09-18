@@ -59,11 +59,14 @@ const findById = async (id) => {
     }
 };  
 
-const findTodayTasks = async (userId, date) => {
+const findTodayTasks = async (userId, startDate, endDate) => {
     try {
         const tasks = await TaskModel.find({
-        userId: userId,
-        dueDate: date,
+            userId: userId,
+            dueData: {
+                $gte: startDate,
+                $lte: endDate,
+            },
         });
 
         return tasks;
