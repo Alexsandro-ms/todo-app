@@ -2,6 +2,7 @@ const TaskModel = require("../models/task.model");
 const { UserModel } = require("../models/user.model");
 
 const create = async (data) => {
+    console.log(data)
     try {
         const task = await TaskModel.create(data);
         return task;
